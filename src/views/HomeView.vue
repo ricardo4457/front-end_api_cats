@@ -1,9 +1,20 @@
+<template>
+  <div class="cat-search-app">
+    <CatSearchInput />
+  </div>
+</template>
+
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import CatSearchInput from '../components/CatSearchInput.vue'
+
+import { useCatsStore } from '@/stores/catsStore'
 </script>
 
-<template>
-  <main>
-    <TheWelcome />
-  </main>
-</template>
+<style>
+.cat-search-app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+</style>
