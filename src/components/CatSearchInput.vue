@@ -1,13 +1,15 @@
 <template>
-  <div class="search-container">
+  <div class="search-container" ref="searchContainer">
     <div class="search-input-wrapper">
       <input
         v-model="searchQuery"
-        @input="filterTagsbySearch"
+        @input="handleInput"
+        @focus="showSuggestions = true"
         placeholder="Search for cat tags..."
         class="search-input"
+        ref="searchInput"
       />
-      <button @click="" class="search-button">
+      <button @click="performSearch" class="search-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -24,44 +26,74 @@
         </svg>
       </button>
 
-      <div class="autocomplete-dropdown">
-        <ul v-for="tag in filteredTags">
-          <li>{{ tag.name }}</li>
+      <div v-if="showSuggestions" class="autocomplete-dropdown">
+        <ul>
+          <li v-for="(tag, index) in filteredTags" :key="index" @click="selectTag(tag)">
+            {{ tag.name }}
+          </li>
+          <li v-if="filteredTags.length === 0" class="no-results">No matching tags found</li>
         </ul>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useCatsStore } from '@/stores/catsStore'
 
 const catsStore = useCatsStore()
 const searchQuery = ref('')
+const showSuggestions = ref(false)
+const searchInput = ref('')
+const searchContainer = ref('')
 
 onMounted(async () => {
-  console.log('Starting to fetch tags...') // Debug log
   await catsStore.fetchAllTags()
-  console.log('Tags in component:', catsStore.allTags) // Debug log
+  document.addEventListener('click', handleClickOutside)
 })
 
-const filteredTags = computed(() => {
-  const query = searchQuery.value
-  return catsStore.allTags.filter((tag) => tag.name && tag.name.includes(query))
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 
-function filterTagsbySearch(searchQuery) {
-  catsStore.searchTagsBySubstr(searchQuery.value)
-}
-
-// Verify reactivity
 watch(
-  () => catsStore.allTags,
-  (newTags) => {
-    console.log('Tags updated:', newTags)
+  searchQuery,
+  (newVal) => {
+    // Update store's current search
+    catsStore.currentSearch = newVal
   },
   { immediate: true },
 )
+
+const filteredTags = computed(() => {
+  return catsStore.allTags.filter((tag) =>
+    // Cannot use function of api proxy because loses reactivty (solve later)
+    tag?.name?.toLowerCase().includes(searchQuery.value.toLowerCase()),
+  )
+})
+
+function handleInput() {
+  showSuggestions.value = searchQuery.value.length > 0
+}
+
+function handleClickOutside(event) {
+  if (!searchContainer.value?.contains(event.target)) {
+    showSuggestions.value = false
+  }
+}
+
+function selectTag(tag) {
+  searchQuery.value = tag.name
+  showSuggestions.value = false
+  performSearch()
+}
+
+function performSearch() {
+  if (searchQuery.value.trim()) {
+    catsStore.searchCatsByTag(searchQuery.value.trim())
+  }
+}
 </script>
 <style scoped>
 .search-container {
@@ -147,5 +179,14 @@ watch(
 
 .autocomplete-dropdown li:last-child {
   border-radius: 0 0 8px 8px;
+}
+.no-results {
+  color: #666;
+  font-style: italic;
+  cursor: default;
+}
+
+.no-results:hover {
+  background-color: transparent !important;
 }
 </style>
