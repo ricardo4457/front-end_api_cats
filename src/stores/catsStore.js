@@ -22,6 +22,7 @@ export const useCatsStore = defineStore('catsStore', () => {
 
     try {
       const response = await axios.get(`http://localhost:3000/api/v1/cats/match?string=${search}`)
+      suggestedTags.value = response.data.matchedTags.value
       return response.data.matchedTags.value
     } catch (err) {
       console.error(err)
