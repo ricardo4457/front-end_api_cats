@@ -37,16 +37,15 @@
     </div>
   </div>
 </template>
-
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useCatsStore } from '@/stores/catsStore'
 
 const catsStore = useCatsStore()
 const searchQuery = ref('')
 const showSuggestions = ref(false)
-const searchInput = ref('')
-const searchContainer = ref('')
+const searchInput = ref(null)
+const searchContainer = ref(null)
 
 onMounted(async () => {
   await catsStore.fetchAllTags()
@@ -57,29 +56,21 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-watch(
-  searchQuery,
-  (newVal) => {
-    // Update store's current search
-    catsStore.currentSearch = newVal
-  },
-  { immediate: true },
-)
-
+// Use computed property to reactively filter tags
 const filteredTags = computed(() => {
-  catsStore.suggestedTags.value = catsStore.allTags.filter((tag) =>
-    // Cannot use function of api proxy because loses reactivty (solve later)
-    tag?.name?.toLowerCase().includes(searchQuery.value.toLowerCase()),
+  if (!searchQuery.value) return []
+  return catsStore.allTags.filter((tag) =>
+    tag.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
   )
-  return catsStore.suggestedTags.value
 })
 
 function handleInput() {
   showSuggestions.value = searchQuery.value.length > 0
+  catsStore.currentSearch = searchQuery.value // Update store
 }
 
 function handleClickOutside(event) {
-  if (!searchContainer.value?.contains(event.target)) {
+  if (searchContainer.value && !searchContainer.value.contains(event.target)) {
     showSuggestions.value = false
   }
 }
@@ -90,10 +81,12 @@ function selectTag(tag) {
   performSearch()
 }
 
-function performSearch() {
-  if (searchQuery.value.trim()) {
-    catsStore.searchCatsByTag(searchQuery.value.trim())
+async function performSearch() {
+  const query = searchQuery.value.trim()
+  if (query) {
+    await catsStore.searchCatsByTag(query)
   }
+
 }
 </script>
 <style scoped>

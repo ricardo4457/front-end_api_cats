@@ -7,7 +7,6 @@
 <script setup>
 import CatSearchInput from '../components/CatSearchInput.vue'
 
-import { useCatsStore } from '@/stores/catsStore'
 </script>
 
 <style>
