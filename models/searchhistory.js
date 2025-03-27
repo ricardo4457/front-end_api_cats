@@ -1,5 +1,6 @@
 'use strict'
 const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class SearchHistory extends Model {
     static associate(models) {
@@ -9,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
+
   SearchHistory.init(
     {
       query: {
@@ -20,8 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'SearchHistory',
       tableName: 'SearchHistories',
-      timestamps: true,
     },
   )
+
   return SearchHistory
 }

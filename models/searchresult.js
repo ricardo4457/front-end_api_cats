@@ -1,5 +1,6 @@
 'use strict'
 const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class SearchResult extends Model {
     static associate(models) {
@@ -9,15 +10,12 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
+
   SearchResult.init(
     {
       searchId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-          model: 'SearchHistories',
-          key: 'id',
-        },
       },
       catId: {
         type: DataTypes.STRING,
@@ -26,9 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       imageUrl: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          isUrl: true,
-        },
       },
       tags: {
         type: DataTypes.JSON,
@@ -40,8 +35,13 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'SearchResult',
       tableName: 'SearchResults',
-      timestamps: true,
+      indexes: [
+        {
+          fields: ['searchId'],
+        },
+      ],
     },
   )
+
   return SearchResult
 }
