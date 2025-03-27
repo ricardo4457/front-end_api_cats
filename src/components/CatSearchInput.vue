@@ -56,7 +56,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-// Use computed property to reactively filter tags
+
 const filteredTags = computed(() => {
   if (!searchQuery.value) return []
   return catsStore.allTags.filter((tag) =>
@@ -66,7 +66,7 @@ const filteredTags = computed(() => {
 
 function handleInput() {
   showSuggestions.value = searchQuery.value.length > 0
-  catsStore.currentSearch = searchQuery.value // Update store
+  catsStore.currentSearch = searchQuery.value 
 }
 
 function handleClickOutside(event) {

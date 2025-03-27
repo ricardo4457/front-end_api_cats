@@ -13,10 +13,10 @@ export const useCatsStore = defineStore('catsStore', () => {
   const fetchAllTags = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/v1/tags')
-      allTags.value = response.data // Store the fetched tags
+      allTags.value = response.data 
     } catch (err) {
       console.error('Error fetching tags:', err)
-      allTags.value = [] // Reset on error
+      allTags.value = [] 
     }
   }
 
@@ -24,11 +24,11 @@ export const useCatsStore = defineStore('catsStore', () => {
     currentSearch.value = search
     try {
       const response = await axios.get(`http://localhost:3000/api/v1/cats/match?string=${search}`)
-      suggestedTags.value = response.data.matchedTags // Store matched tags
+      suggestedTags.value = response.data.matchedTags 
       return response.data.matchedTags
     } catch (err) {
       console.error('Error searching tags:', err)
-      suggestedTags.value = [] // Reset on error
+      suggestedTags.value = [] 
       return []
     }
   }
@@ -42,11 +42,11 @@ export const useCatsStore = defineStore('catsStore', () => {
           total: 10,
         },
       })
-      searchResults.value = response.data // Store search results
+      searchResults.value = response.data 
 
     } catch (err) {
       console.error('Error searching cats:', err)
-      searchResults.value = [] // Reset on error
+      searchResults.value = [] 
     }
   }
 
