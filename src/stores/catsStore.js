@@ -22,7 +22,7 @@ export const useCatsStore = defineStore('catsStore', () => {
 
     try {
       const response = await axios.get(`http://localhost:3000/api/v1/cats/match?string=${search}`)
-      searchResults.value = response.data.tags.flatMap((tag) => tag)
+      return response.data.matchedTags.value
     } catch (err) {
       console.error(err)
     }
