@@ -1,24 +1,47 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+'use strict'
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class SearchResult extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.SearchHistory, {
+        foreignKey: 'searchId',
+        as: 'search',
+      })
     }
   }
-  SearchResult.init({
-    query: DataTypes.STRING,
-    userId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'SearchResult',
-  });
-  return SearchResult;
-};
+  SearchResult.init(
+    {
+      searchId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'SearchHistories',
+          key: 'id',
+        },
+      },
+      catId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isUrl: true,
+        },
+      },
+      tags: {
+        type: DataTypes.JSON,
+        allowNull: false,
+        defaultValue: [],
+      },
+    },
+    {
+      sequelize,
+      modelName: 'SearchResult',
+      tableName: 'SearchResults',
+      timestamps: true,
+    },
+  )
+  return SearchResult
+}
