@@ -1,12 +1,13 @@
 <template>
   <div class="cat-search-app">
     <CatSearchInput />
+    <CatResults />
   </div>
 </template>
 
 <script setup>
 import CatSearchInput from '../components/CatSearchInput.vue'
-
+import CatResults from '../components/CatResults.vue'
 </script>
 
 <style>
