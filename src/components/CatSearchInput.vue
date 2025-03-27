@@ -67,10 +67,11 @@ watch(
 )
 
 const filteredTags = computed(() => {
-  return catsStore.allTags.filter((tag) =>
+  catsStore.suggestedTags.value = catsStore.allTags.filter((tag) =>
     // Cannot use function of api proxy because loses reactivty (solve later)
     tag?.name?.toLowerCase().includes(searchQuery.value.toLowerCase()),
   )
+  return catsStore.suggestedTags.value
 })
 
 function handleInput() {
