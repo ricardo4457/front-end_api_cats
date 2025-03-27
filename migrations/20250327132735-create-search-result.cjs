@@ -4,39 +4,22 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('SearchResults', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
       },
       searchId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: 'SearchHistories',
           key: 'id',
         },
       },
-      catId: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      imageUrl: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      tags: {
-        type: Sequelize.JSON,
-        allowNull: false,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
+      catId: Sequelize.STRING,
+      imageUrl: Sequelize.STRING,
+      tags: Sequelize.JSON,
+      createdAt: Sequelize.DATE,
+      updatedAt: Sequelize.DATE,
     })
   },
   down: async (queryInterface) => {
