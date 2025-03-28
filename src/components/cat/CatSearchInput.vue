@@ -10,20 +10,7 @@
         ref="searchInput"
       />
       <button @click="performSearch" class="search-button">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
+        <img src="../../assets/search-icon.svg" width="20px" height="20px" />
       </button>
 
       <div v-if="showSuggestions" class="autocomplete-dropdown">
@@ -56,7 +43,6 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-
 const filteredTags = computed(() => {
   if (!searchQuery.value) return []
   return catsStore.allTags.filter((tag) =>
@@ -66,7 +52,7 @@ const filteredTags = computed(() => {
 
 function handleInput() {
   showSuggestions.value = searchQuery.value.length > 0
-  catsStore.currentSearch = searchQuery.value 
+  catsStore.currentSearch = searchQuery.value
 }
 
 function handleClickOutside(event) {
@@ -86,7 +72,6 @@ async function performSearch() {
   if (query) {
     await catsStore.searchCatsByTag(query)
   }
-
 }
 </script>
 <style scoped>
