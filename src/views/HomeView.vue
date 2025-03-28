@@ -6,8 +6,8 @@
 </template>
 
 <script setup>
-import CatSearchInput from '../components/CatSearchInput.vue'
-import CatResults from '../components/CatResults.vue'
+import CatSearchInput from '../components/cat/CatSearchInput.vue'
+import CatResults from '../components/cat/CatResults.vue'
 </script>
 
 <style>
