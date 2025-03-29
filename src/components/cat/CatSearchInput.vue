@@ -24,9 +24,12 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useCatsStore } from '@/stores/catsStore'
+
+const emit = defineEmits(['search'])
 
 const catsStore = useCatsStore()
 const searchQuery = ref('')
@@ -52,7 +55,6 @@ const filteredTags = computed(() => {
 
 function handleInput() {
   showSuggestions.value = searchQuery.value.length > 0
-  catsStore.currentSearch = searchQuery.value
 }
 
 function handleClickOutside(event) {
@@ -70,7 +72,7 @@ function selectTag(tag) {
 async function performSearch() {
   const query = searchQuery.value.trim()
   if (query) {
-    await catsStore.searchCatsByTag(query)
+    emit('search', query)
   }
 }
 </script>

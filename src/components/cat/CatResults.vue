@@ -6,7 +6,7 @@
         <button
           v-for="tag in suggestedTags"
           :key="tag.name"
-          @click="searchTag(tag.name)"
+          @click="$emit('tag-selected', tag.name)"
           class="tag-button"
         >
           {{ tag.name }}
@@ -49,36 +49,49 @@
       </div>
     </div>
 
-    <div v-else-if="currentSearch" class="no-results">No cats found for "{{ currentSearch }}"</div>
+    <div v-else-if="searchTerm" class="no-results">No cats found for "{{ searchTerm }}"</div>
   </div>
 </template>
 
 <script setup>
+import { computed, watch } from 'vue'
 import { useCatsStore } from '@/stores/catsStore'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+
+const props = defineProps({
+  searchTerm: {
+    type: String,
+    default: '',
+  },
+})
+
+const emit = defineEmits(['tag-selected'])
 
 const catsStore = useCatsStore()
-
-const { searchResults, suggestedTags, currentSearch, currentPage, totalResults, itemsPerPage } =
+const { searchResults, suggestedTags, currentPage, totalResults, itemsPerPage } =
   storeToRefs(catsStore)
 
 const totalPages = computed(() => Math.ceil(totalResults.value / itemsPerPage.value))
 
-const searchTag = (tag) => {
-  catsStore.currentSearch = tag
-  catsStore.searchCatsByTag(tag, 1)
-}
+watch(
+  () => props.searchTerm,
+  (newVal) => {
+    if (newVal) {
+      catsStore.searchCatsByTag(newVal)
+    }
+  },
+  { immediate: true },
+)
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
-    catsStore.searchCatsByTag(currentSearch.value, currentPage.value + 1)
+    catsStore.searchCatsByTag(props.searchTerm, currentPage.value + 1)
   }
 }
 
 const prevPage = () => {
   if (currentPage.value > 1) {
-    catsStore.searchCatsByTag(currentSearch.value, currentPage.value - 1)
+    catsStore.searchCatsByTag(props.searchTerm, currentPage.value - 1)
   }
 }
 </script>
