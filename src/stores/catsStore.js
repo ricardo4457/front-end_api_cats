@@ -12,7 +12,7 @@ export const useCatsStore = defineStore('catsStore', () => {
   const itemsPerPage = ref(10)
   const totalResults = ref(0)
 
-  const totalPages = computed(() => Math.ceil(totalResults.value / itemsPerPage.value)) // Check who many pages are required
+  const totalPages = computed(() => Math.ceil(totalResults.value / itemsPerPage.value)) 
 
   const fetchAllTags = async () => {
     try {
