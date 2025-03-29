@@ -3,15 +3,62 @@
     <h1 class="page-title">Search Statistics</h1>
 
     <div class="stats-sections">
-
+      <TopQueriesSection @query-click="handleQueryClick" />
+      <TopCategoriesSection @category-click="handleCategoryClick" />
     </div>
 
-
+    <CatResultsSection
+      v-if="showResults"
+      :cats="displayedCats"
+      :title="resultsTitle"
+      @back="clearResults"
+    />
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { useStatsStore } from '@/stores/statsStore'
+import TopQueriesSection from '@/components/stats/TopQueriesSection.vue'
+import TopCategoriesSection from '@/components/stats/TopCategoriesSection.vue'
+import CatResultsSection from '@/components/stats/CatResultsSection.vue'
 
+const statsStore = useStatsStore()
+const showResults = ref(false)
+const displayedCats = ref([])
+const resultsTitle = ref('')
+
+onMounted(() => {
+  statsStore.fetchTopQueries()
+  statsStore.fetchTopCategories()
+})
+
+const handleQueryClick = async (query) => {
+  try {
+    await statsStore.fetchCatsByCategory(query)
+    displayedCats.value = statsStore.categoryCats
+    resultsTitle.value = `Cats found for query: "${query}"`
+    showResults.value = true
+  } catch (error) {
+    console.error('Error fetching cats for query:', error)
+  }
+}
+
+const handleCategoryClick = async (category) => {
+  try {
+    await statsStore.fetchCatsByCategory(category)
+    displayedCats.value = statsStore.categoryCats
+    resultsTitle.value = `Cats in category: "${category}"`
+    showResults.value = true
+  } catch (error) {
+    console.error('Error fetching cats for category:', error)
+  }
+}
+
+const clearResults = () => {
+  showResults.value = false
+  displayedCats.value = []
+}
 </script>
 
 <style scoped>
