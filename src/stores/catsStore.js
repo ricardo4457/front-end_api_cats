@@ -16,7 +16,7 @@ export const useCatsStore = defineStore('catsStore', () => {
 
   const fetchAllTags = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/tags')
+      const response = await axios.get('http://192.168.1.72:3000/api/v1/tags')
       allTags.value = response.data
     } catch (err) {
       console.error('Error fetching tags:', err)
@@ -27,7 +27,7 @@ export const useCatsStore = defineStore('catsStore', () => {
   const searchTagsBySubstr = async (search) => {
     currentSearch.value = search
     try {
-      const response = await axios.get(`http://localhost:3000/api/v1/cats/match?string=${search}`)
+      const response = await axios.get(`http://192.168.1.72:3000/api/v1/cats/match?string=${search}`)
       suggestedTags.value = response.data.matchedTags
       return response.data.matchedTags
     } catch (err) {
@@ -40,7 +40,7 @@ export const useCatsStore = defineStore('catsStore', () => {
   const searchCatsByTag = async (tag, page = 1) => {
     currentPage.value = page
     try {
-      const response = await axios.get(`http://localhost:3000/api/v1/cats/filter`, {
+      const response = await axios.get(`http://192.168.1.72:3000/api/v1/cats/filter`, {
         params: {
           tag: tag,
           omit: (page - 1) * itemsPerPage.value,

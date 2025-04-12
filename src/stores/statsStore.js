@@ -13,7 +13,7 @@ export const useStatsStore = defineStore('StatsStore', () => {
   const fetchTopQueries = async () => {
     try {
       loading.value = true
-      const response = await axios.get('http://localhost:3000/api/v1/stats/top-queries')
+      const response = await axios.get('http://192.168.1.72:3000/api/v1/stats/top-queries')
       topQueries.value = response.data
     } catch (err) {
       error.value = err.message
@@ -25,7 +25,7 @@ export const useStatsStore = defineStore('StatsStore', () => {
   const fetchTopCategories = async () => {
     try {
       loading.value = true
-      const response = await axios.get('http://localhost:3000/api/v1/stats/top-categories')
+      const response = await axios.get('http://192.168.1.72:3000/api/v1/stats/top-categories')
       topCategories.value = response.data
     } catch (err) {
       error.value = err.message
@@ -39,7 +39,7 @@ export const useStatsStore = defineStore('StatsStore', () => {
       loading.value = true
       currentCategory.value = tag
       const response = await axios.get(
-        `http://localhost:3000/api/v1/stats/category/${encodeURIComponent(tag)}`,
+        `http://192.168.1.72:3000/api/v1/stats/category/${encodeURIComponent(tag)}`,
       )
       categoryCats.value = response.data.cats
     } catch (err) {
