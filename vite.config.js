@@ -7,7 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   server: {
-  host: '192.168.1.72',  
+  host: '0.0.0.0',
     port: 5173,
     strictPort: true,
     hmr: {
@@ -15,8 +15,8 @@ export default defineConfig({
     }
   },
   plugins: [
-    [vue()],
-    [vueDevTools()],
+    vue(),
+    vueDevTools(),
   ],
   resolve: {
     alias: {
